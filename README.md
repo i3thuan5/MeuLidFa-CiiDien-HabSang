@@ -134,7 +134,7 @@
 
 4-1. 假使在tactorn訓練時節，愛產生`gta/`檔案，走`time dobi tacotron-gta`
 
-4-2. `time dobi habsang`，試合成語句。因為wavernn吂做，故所有程式毋著係著个。會產生`Tacotron`摎`griffinlim`个音檔。`griffinlim`个音檔有電子聲，故所愛訓練`WaveRNN`分聲像人講話。
+4-2. `time dobi habsang-griffinlim`，試合成語句。`griffinlim`个音檔有電子聲，故所愛訓練`WaveRNN`分聲像人講話。
 ```
 5-ciidien-20190516-16k-MeuLid-model_outputs/
 ├── hagfa_lsa_smooth_attention.tacotron

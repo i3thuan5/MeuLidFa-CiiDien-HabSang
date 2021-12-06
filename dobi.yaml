@@ -14,6 +14,7 @@ env=sadtin:
   - SANG_MIONGZII=https://www.dropbox.com/s/gs6gk8zuehxbqti/moe-hakka-sound.tar?dl=0
   - PIN=16k
   - THREAD=4
+  - KU={env.KU:kiung ha loiˇ liau dong senˊ qi.}
 
 alias=hazoi-ngiliau:
   tasks: [sadtin, hazoi-ngiliau-job]
@@ -30,6 +31,9 @@ alias=tacotron:
 alias=tacotron-gta:
   tasks: [sadtin, tacotron-gta-job, ]
 
+alias=habsang-griffinlim:
+  tasks: [sadtin, habsang-griffinlim-job, ]
+
 alias=preprocess-wavernn:
   tasks: [sadtin, preprocess-wavernn-job, ]
 
@@ -37,7 +41,7 @@ alias=wavernn:
   tasks: [sadtin, wavernn-job, ]
 
 alias=habsang:
-  tasks: [sadtin, habsang-job, ]
+  tasks: [sadtin, habsang-griffinlim-job, habsang-wavernn-job, ]
 
 mount=pun_ngiliau:
   bind: ./1-{env.BANBUN}/
@@ -192,10 +196,10 @@ job=wavernn-job:
     '
   mounts: [camsu, data, checkpoints, outputs, ]
 
-job=habsang-job:
+job=habsang-griffinlim-job:
   use: hiunlien-kuangin
   env:
-  - KU={env.KU:kiung ha loiˇ liau dong senˊ qi.}
+  - KU={env.KU}
   - BANBUN={env.BANBUN}
   - NGINGIEN={env.NGINGIEN}
   - CUDA_VISIBLE_DEVICES=1
@@ -206,6 +210,22 @@ job=habsang-job:
       cp /camsu/text_symbols.py utils/text/symbols.py
       sed -i "s/required=True, //g" gen_tacotron.py
       time python gen_tacotron.py --input_text "$KU" griffinlim
+    '
+  mounts: [camsu, checkpoints, outputs, ]
+
+job=habsang-wavernn-job:
+  use: hiunlien-kuangin
+  env:
+  - KU={env.KU}
+  - BANBUN={env.BANBUN}
+  - NGINGIEN={env.NGINGIEN}
+  - CUDA_VISIBLE_DEVICES=1
+  command: |
+    bash -eux -c '
+      cp /camsu/hparams.py .
+      cp /camsu/text_init.py utils/text/__init__.py
+      cp /camsu/text_symbols.py utils/text/symbols.py
+      sed -i "s/required=True, //g" gen_tacotron.py
       time python gen_tacotron.py --input_text "$KU" wavernn
       time python gen_tacotron.py --input_text "$KU" wavernn --unbatched
     '
